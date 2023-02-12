@@ -55,6 +55,27 @@ stream* stream_of_short(int size, ...)
     return head_stream;
 }
 
+void free_stream(stream* str)
+{
+    if (str->h->spl->spliterator_ty == SPL_REFERENCE)
+    {
+        _free_spliterator_reference(str->h->spl);
+    }
+    else
+    {
+        _free_spliterator(str->h->spl);
+    }
+    free(str->h);
+    stream* p = str, *pp = str->next;
+    for(; pp != NULL;)
+    {   
+        free(p);
+        p = pp;
+        pp = pp->next;
+    }
+    free(p);
+}
+
 stream* filter_short(stream* pre, filter_ptr_short op)
 {
     stream* cur = (stream *)malloc(sizeof(stream));

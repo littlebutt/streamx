@@ -19,6 +19,8 @@ int main(void)
     stream* str1 = stream_of_short(5, -1, -2, 2, 4, 5);
     stream* str2 = filter_short(str1, filter);
     for_each_short(str2, foreach);
+    free_stream(str1);
+    printf("PAUSE");
     
    // spliterator* spl = BUILD_SPLITERATOR(short, 3, array)
 
