@@ -74,7 +74,7 @@ void for_each_short(stream* pre, foreach_ptr_short op)
     cur->next = NULL;
     stream* source = pre->source;
     spliterator* spl = source->h->spl;
-    bint* spl_ex = build_bint_array(spl->length);
+    long spl_flag = (1 << spl->length) - 1;
     for (int i = 0; i < spl->length; ++i)
     {
         short _el = spl->v.short_spl.body[i];
@@ -86,25 +86,24 @@ void for_each_short(stream* pre, foreach_ptr_short op)
                 {
                     case STR_FILTER:
                     {
-                        if(((filter_ptr_short)(p->sink))(&_el) && spl_ex[i])
+                        if(((filter_ptr_short)(p->sink))(&_el) && MASK_FLAG(spl_flag, i))
                         {
-                            spl_ex[i] = true;
+                            SET_FLAG_ON(spl_flag, i);
                         }
                         else
                         {
-                            spl_ex[i] = false;
+                            SET_FLAG_OFF(spl_flag, i);
                         }
                         break;
                     }
                 }
             }
         }
-        if (spl_ex[i])
+        if (MASK_FLAG(spl_flag, i))
         {
             op(&_el);
         }
     }
-    free_bint_array(spl_ex);
 
 }
 

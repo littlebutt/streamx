@@ -12,20 +12,16 @@ extern "C" {
 
 typedef int bint;
 
-bint* build_bint_array(int size)
-{
-    bint* _array = (bint *)malloc(size * sizeof(bint));
-    for (int i = 0; i < size; ++i)
-    {
-        _array[i] = true;
-    }
-    return _array;
-}
+#define MASK_FLAG(fe, su)   \
+    ((fe) >> (su) & 1)
 
-void free_bint_array(bint* array)
-{
-    free(array);
-}
+#define SET_FLAG_ON(fe, su)    \
+    (fe) |= (1 << su)
+
+#define SET_FLAG_OFF(fe, su) \
+    (fe) &= ~(1 << su)
+
+
 
 
 #ifdef __cplusplus
