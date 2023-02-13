@@ -1,15 +1,21 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "stream.h"
+#include "stream_api.h"
 
-bint filter(short* s)
+bint filter(short s)
 {
-    return *s > 0;
+    return s > 0;
 }
 
-void foreach(short* s)
+short map(short s)
 {
-    printf("%d\n", *s);
+    short res = s + 5;
+    s = res;
+}
+
+void foreach(short s)
+{
+    printf("%d\n", s);
 }
 
 
@@ -18,7 +24,8 @@ int main(void)
     //short array[3] = {0, 1, 8};
     stream* str1 = stream_of_short(5, -1, -2, 2, 4, 5);
     stream* str2 = filter_short(str1, filter);
-    for_each_short(str2, foreach);
+    stream* str3 = map_short(str2, map);
+    for_each_short(str3, foreach);
     free_stream(str1);
     printf("PAUSE");
     

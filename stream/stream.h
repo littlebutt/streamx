@@ -8,7 +8,7 @@ extern "C" {
 #include <stdarg.h>
 #include <stdlib.h>
 #include "head.h"
-#include "utils.h"
+#include "macros.h"
 
 enum stream_op_type 
 {
@@ -26,11 +26,6 @@ typedef struct _stream
     enum stream_op_type op_ty;
     void* sink;
 }stream;
-
-
-typedef bint(*filter_ptr_short)(short*);
-
-typedef void(*foreach_ptr_short)(short*);
 
 stream* stream_of_short(int size, ...)
 {
@@ -76,57 +71,12 @@ void free_stream(stream* str)
     free(p);
 }
 
-stream* filter_short(stream* pre, filter_ptr_short op)
-{
-    stream* cur = (stream *)malloc(sizeof(stream));
-    pre->next = cur;
-    cur->h = pre->h;
-    cur->next = NULL;
-    cur->sink = op;
-    cur->source = pre->source;
-    cur->op_ty = STR_FILTER;
-    return cur;
-}
+typedef void(*FOREACH_PTR(short))(short);
 
-void for_each_short(stream* pre, foreach_ptr_short op)
-{
-    stream* cur = (stream *)malloc(sizeof(stream));
-    pre->next = cur;
-    cur->next = NULL;
-    stream* source = pre->source;
-    spliterator* spl = source->h->spl;
-    long spl_flag = (1 << spl->length) - 1;
-    for (int i = 0; i < spl->length; ++i)
-    {
-        short _el = spl->v.short_spl.body[i];
-        for (stream* p = source; p->next; p = p->next)
-        {
-            if (p->sink)
-            {
-                switch (p->op_ty)
-                {
-                    case STR_FILTER:
-                    {
-                        if(((filter_ptr_short)(p->sink))(&_el) && MASK_FLAG(spl_flag, i))
-                        {
-                            SET_FLAG_ON(spl_flag, i);
-                        }
-                        else
-                        {
-                            SET_FLAG_OFF(spl_flag, i);
-                        }
-                        break;
-                    }
-                }
-            }
-        }
-        if (MASK_FLAG(spl_flag, i))
-        {
-            op(&_el);
-        }
-    }
+typedef bint(*FILTER_PTR(short))(short);
 
-}
+typedef short(*MAP_PTR(short))(short);
+
 
 #ifdef __cplusplus
 }
