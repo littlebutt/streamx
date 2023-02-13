@@ -19,7 +19,6 @@ void for_each_short(stream* pre, FOREACH_PTR(short) op)
     long spl_flag = (1 << spl->length) - 1;
     for (int i = 0; i < spl->length; ++i)
     {
-        short _el = spl->v.short_spl.body[i];
         for (stream* p = source; p->next; p = p->next)
         {
             if (p->sink)
@@ -28,7 +27,7 @@ void for_each_short(stream* pre, FOREACH_PTR(short) op)
                 {
                     case STR_FILTER:
                     {
-                        if(((FILTER_PTR(short))(p->sink))(_el) && MASK_FLAG(spl_flag, i))
+                        if(((FILTER_PTR(short))(p->sink))(spl->v.short_spl.body[i]) && MASK_FLAG(spl_flag, i))
                         {
                             SET_FLAG_ON(spl_flag, i);
                         }
@@ -40,7 +39,7 @@ void for_each_short(stream* pre, FOREACH_PTR(short) op)
                     }
                     case STR_MAP:
                     {
-                        pre->source->h->spl->v.short_spl.body[i] = ((MAP_PTR(short))(p->sink))(_el);
+                        pre->source->h->spl->v.short_spl.body[i] = ((MAP_PTR(short))(p->sink))(spl->v.short_spl.body[i]);
                     }
                 }
             }
