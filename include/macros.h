@@ -12,13 +12,6 @@ extern "C" {
 
 typedef int bint;
 
-#define APPEND(ar, ty, v)                               \
-    do {                                                \
-        long len = sizeof(ar) / sizeof(ty);             \
-        ar = (ty *)realloc(ar, (len + 1) * sizeof(ty)); \
-        ar[len - 1] = v;                         \
-    }while(0);
-
 #define MASK_FLAG(fe, su)       ((fe) >> (su) & 1)
 
 #define SET_FLAG_ON(fe, su)     (fe) |= (1 << su)
