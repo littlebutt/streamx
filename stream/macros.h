@@ -12,26 +12,24 @@ extern "C" {
 
 typedef int bint;
 
-#define MASK_FLAG(fe, su)       \
-    ((fe) >> (su) & 1)
+#define APPEND(ar, ty, v)                               \
+    do {                                                \
+        long len = sizeof(ar) / sizeof(ty);             \
+        ar = (ty *)realloc(ar, (len + 1) * sizeof(ty)); \
+        ar[len - 1] = v;                         \
+    }while(0);
 
-#define SET_FLAG_ON(fe, su)     \
-    (fe) |= (1 << su)
+#define MASK_FLAG(fe, su)       ((fe) >> (su) & 1)
 
-#define SET_FLAG_OFF(fe, su)    \
-    (fe) &= ~(1 << su)
+#define SET_FLAG_ON(fe, su)     (fe) |= (1 << su)
 
-#define FILTER_PTR(ty)          \
-    filter_ptr_ ## ty
+#define SET_FLAG_OFF(fe, su)    (fe) &= ~(1 << su)
 
-#define FILTER(ty)              \
-    filter_ ## ty
+#define FILTER_PTR(ty)          filter_ptr_ ## ty
 
-#define FOREACH_PTR(ty)         \
-    foreach_ptr_ ## ty
+#define FOREACH_PTR(ty)         foreach_ptr_ ## ty
 
-#define MAP_PTR(ty)             \
-    map_ptr_ ## ty
+#define MAP_PTR(ty)             map_ptr_ ## ty
 
 #ifdef __cplusplus
 }

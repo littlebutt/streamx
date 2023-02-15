@@ -9,7 +9,7 @@ extern "C" {
 #include "stream.h"
 
 
-stream* FILTER(short)(stream* pre, FILTER_PTR(short) op)
+stream* filter_short(stream* pre, FILTER_PTR(short) op)
 {
     stream* cur = (stream *)malloc(sizeof(stream));
     pre->next = cur;
