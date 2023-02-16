@@ -25,9 +25,13 @@ int main(void)
     stream* str1 = stream_of_short(5, -1, -2, 2, 4, 5);
     stream* str2 = map_short(str1, map);
     stream* str3 = filter_short(str2, filter);
+    // for_each_short(str3, foreach);
     short* dst =NULL;
     struct to_array_res_short res = to_array_short(str3);
-    
+    for (int i = 0; i < res.length; i++)
+    {
+        printf("%d", (int)res.res[i]);
+    }
     free_stream(str1);
     printf("PAUSE");
     

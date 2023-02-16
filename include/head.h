@@ -16,6 +16,8 @@ extern "C" {
 // stream op flag for sorted, set if method sorted(void*) called
 #define SORTED      0x00000100
 
+#define REDUCE      0x00001000
+
 typedef struct head
 {
     // spliterator for source

@@ -24,6 +24,26 @@ typedef int bint;
 
 #define MAP_PTR(ty)             map_ptr_ ## ty
 
+#define DO_FILTER(ty, op, ar, idx, fe)                                      \
+        do                                                                  \
+        {                                                                   \
+            if(((FILTER_PTR(ty))(p->sink))(ar[idx]) && MASK_FLAG(fe, idx))  \
+            {                                                               \
+                SET_FLAG_ON(fe, idx);                                       \
+            }                                                               \
+            else                                                            \
+            {                                                               \
+                SET_FLAG_OFF(fe, idx);                                      \
+            }                                                               \
+        } while (0);
+
+#define DO_MAP(ty, op, ar, idx)                                             \
+        do                                                                  \
+        {                                                                   \
+            ar[idx] = ((MAP_PTR(ty))(op))(ar[idx]);                         \
+        } while (0);
+        
+
 #ifdef __cplusplus
 }
 #endif

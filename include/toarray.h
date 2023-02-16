@@ -18,13 +18,19 @@ struct to_array_res_short to_array_short(stream* pre)
 {
     struct to_array_res_short* res = (struct to_array_res_short*)malloc(sizeof(struct to_array_res_short));
     res->length = 0;
+    // 1. appending stream
     stream* cur = (stream *)malloc(sizeof(stream));
     pre->next = cur;
     cur->next = NULL;
+    // 2. building stream_state
+    stream_state* str_state = (stream_state *)malloc(sizeof(stream_state));
+    long length = pre->source->h->spl->length;
+    str_state->length = length;
+    str_state->spl_fence = (1 << length) - 1;
+    // 3. iterating stream
     stream* source = pre->source;
     spliterator* spl = source->h->spl;
-    long spl_flag = (1 << spl->length) - 1;
-    for (int i = 0; i < spl->length; ++i)
+    for (int i = 0; i < length; ++i)
     {
         for (stream* p = source; p->next; p = p->next)
         {
@@ -34,24 +40,18 @@ struct to_array_res_short to_array_short(stream* pre)
                 {
                     case STR_FILTER:
                     {
-                        if(((FILTER_PTR(short))(p->sink))(spl->v.short_spl.body[i]) && MASK_FLAG(spl_flag, i))
-                        {
-                            SET_FLAG_ON(spl_flag, i);
-                        }
-                        else
-                        {
-                            SET_FLAG_OFF(spl_flag, i);
-                        }
+                        DO_FILTER(short, p->sink, spl->v.short_spl.body, i, str_state->spl_fence);
                         break;
                     }
                     case STR_MAP:
                     {
-                        pre->source->h->spl->v.short_spl.body[i] = ((MAP_PTR(short))(p->sink))(spl->v.short_spl.body[i]);
+                        DO_MAP(short, p->sink, pre->source->h->spl->v.short_spl.body, i);
+                        break;
                     }
                 }
             }
         }
-        if (MASK_FLAG(spl_flag, i))
+        if (MASK_FLAG(str_state->spl_fence, i))
         {
             res = (struct to_array_res_short*)realloc(res, sizeof(struct to_array_res_short) + (1 + res->length) * sizeof(short));
             res->res[res->length ++] = pre->source->h->spl->v.short_spl.body[i];

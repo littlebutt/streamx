@@ -14,8 +14,17 @@ enum stream_op_type
 {
     STR_FILTER = 1,
     STR_MAP,
+    STR_DISTINCT,
+    STR_SORTED,
+    STR_LIMIT,
+    STR_REDUCE,
     STR_FOREACH,
     STR_TOARRAY,
+    STR_MAX,
+    STR_MIN,
+    STR_COUNT,
+    STR_ANYMATCH,
+    STR_ALLMATCH,
 };
 
 typedef struct _stream 
@@ -26,6 +35,15 @@ typedef struct _stream
     enum stream_op_type op_ty;
     void* sink;
 }stream;
+
+typedef struct 
+{
+    long length;
+    long spl_fence;
+    long spl_max;
+    long spl_min;
+}stream_state;
+
 
 stream* stream_of_short(int size, ...)
 {
