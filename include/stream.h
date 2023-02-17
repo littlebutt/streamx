@@ -12,7 +12,8 @@ extern "C" {
 
 enum stream_op_type 
 {
-    STR_FILTER = 1,
+    STR_NONE = 0,
+    STR_FILTER,
     STR_MAP,
     STR_DISTINCT,
     STR_SORTED,
@@ -34,6 +35,7 @@ typedef struct _stream
     struct _stream* next;
     enum stream_op_type op_ty;
     void* sink;
+    long limit_size;
 }stream;
 
 typedef struct 
@@ -65,6 +67,7 @@ stream* stream_of_short(int size, ...)
     head_stream->next = NULL;
     head_stream->source = head_stream;
     head_stream->sink = NULL;
+    head_stream->op_ty = STR_NONE;
     return head_stream;
 }
 

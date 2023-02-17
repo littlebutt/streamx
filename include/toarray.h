@@ -14,7 +14,7 @@ struct to_array_res_short {
     short res[0];
 }__attribute((packed));
 
-struct to_array_res_short to_array_short(stream* pre)
+struct to_array_res_short* to_array_short(stream* pre)
 {
     struct to_array_res_short* res = (struct to_array_res_short*)malloc(sizeof(struct to_array_res_short));
     res->length = 0;
@@ -34,20 +34,25 @@ struct to_array_res_short to_array_short(stream* pre)
     {
         for (stream* p = source; p->next; p = p->next)
         {
-            if (p->sink)
+            switch (p->op_ty)
             {
-                switch (p->op_ty)
+                case STR_NONE:
                 {
-                    case STR_FILTER:
-                    {
-                        DO_FILTER(short, p->sink, spl->v.short_spl.body, i, str_state->spl_fence);
-                        break;
-                    }
-                    case STR_MAP:
-                    {
-                        DO_MAP(short, p->sink, pre->source->h->spl->v.short_spl.body, i);
-                        break;
-                    }
+                    continue;
+                }
+                case STR_FILTER:
+                {
+                    DO_FILTER(short, p->sink, spl->v.short_spl.body, i, str_state->spl_fence);
+                    break;
+                }
+                case STR_MAP:
+                {
+                    DO_MAP(short, p->sink, pre->source->h->spl->v.short_spl.body, i);
+                    break;
+                }
+                default:
+                {
+                    return;
                 }
             }
         }
@@ -57,7 +62,7 @@ struct to_array_res_short to_array_short(stream* pre)
             res->res[res->length ++] = pre->source->h->spl->v.short_spl.body[i];
         }
     }
-    return *res;
+    return res;
 }
 
 #ifdef __cplusplus

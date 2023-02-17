@@ -7,8 +7,9 @@ extern "C" {
 
 #include "spliterator.h"
 #include "filter.h"
-#include "foreach.h"
 #include "map.h"
+#include "limit.h"
+#include "foreach.h"
 #include "toarray.h"
 
 #define TYPECMP(ty1, ty2) __builtin_types_compatible_p(ty1, ty2)

@@ -12,11 +12,11 @@ extern "C" {
 
 typedef int bint;
 
-#define MASK_FLAG(fe, su)       ((fe) >> (su) & 1)
+#define MASK_FLAG(fe, idx)       ((fe) >> (idx) & 1)
 
-#define SET_FLAG_ON(fe, su)     (fe) |= (1 << su)
+#define SET_FLAG_ON(fe, idx)     (fe) |= (1 << idx)
 
-#define SET_FLAG_OFF(fe, su)    (fe) &= ~(1 << su)
+#define SET_FLAG_OFF(fe, idx)    (fe) &= ~(1 << idx)
 
 #define FILTER_PTR(ty)          filter_ptr_ ## ty
 

@@ -27,20 +27,26 @@ void for_each_short(stream* pre, FOREACH_PTR(short) op)
     {
         for (stream* p = source; p->next; p = p->next)
         {
-            if (p->sink)
+            
+            switch (p->op_ty)
             {
-                switch (p->op_ty)
+                case STR_NONE:
                 {
-                    case STR_FILTER:
-                    {
-                        DO_FILTER(short, p->sink, spl->v.short_spl.body, i, str_state->spl_fence);
-                        break;
-                    }
-                    case STR_MAP:
-                    {
-                        DO_MAP(short, p->sink, pre->source->h->spl->v.short_spl.body, i);
-                        break;
-                    }
+                    continue;
+                }
+                case STR_FILTER:
+                {
+                    DO_FILTER(short, p->sink, spl->v.short_spl.body, i, str_state->spl_fence);
+                    break;
+                }
+                case STR_MAP:
+                {
+                    DO_MAP(short, p->sink, pre->source->h->spl->v.short_spl.body, i);
+                    break;
+                }
+                default:
+                {
+                    return;
                 }
             }
         }
