@@ -25,31 +25,8 @@ void for_each_short(stream* pre, FOREACH_PTR(short) op)
     spliterator* spl = source->h->spl;
     for (int i = 0; i < length; ++i)
     {
-        for (stream* p = source; p->next; p = p->next)
-        {
-            
-            switch (p->op_ty)
-            {
-                case STR_NONE:
-                {
-                    continue;
-                }
-                case STR_FILTER:
-                {
-                    DO_FILTER(short, p->sink, spl->v.short_spl.body, i, str_state->spl_fence);
-                    break;
-                }
-                case STR_MAP:
-                {
-                    DO_MAP(short, p->sink, pre->source->h->spl->v.short_spl.body, i);
-                    break;
-                }
-                default:
-                {
-                    return;
-                }
-            }
-        }
+        DO_INTERMEDIATE_STAGE(short, pre, i, str_state);
+        
         if (MASK_FLAG(str_state->spl_fence, i))
         {
             op(pre->source->h->spl->v.short_spl.body[i]);

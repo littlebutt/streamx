@@ -47,29 +47,7 @@ typedef struct
 }stream_state;
 
 
-stream* stream_of_short(int size, ...)
-{
-    va_list valist;
-    va_start(valist, size);
-    short* array = (short *)malloc(size * sizeof(short));
-    for (int i = 0; i < size; ++i)
-    {
-        array[i] = va_arg(valist, int);
-    }
-    va_end(valist);
-
-    spliterator* spl = _build_spliterator_short(size, array);
-    head* h = (head *)malloc(sizeof(head));
-    h->stream_op_flag = 0x00000000;
-    h->spl = spl;
-    stream* head_stream = (stream *)malloc(sizeof(stream));
-    head_stream->h = h;
-    head_stream->next = NULL;
-    head_stream->source = head_stream;
-    head_stream->sink = NULL;
-    head_stream->op_ty = STR_NONE;
-    return head_stream;
-}
+STREAM_OF_METHOD(short)
 
 void free_stream(stream* str)
 {
