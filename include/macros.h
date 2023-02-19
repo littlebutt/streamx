@@ -72,33 +72,36 @@ typedef int bint;
         ar[idx] = ((MAP_PTR(ty))(op))(ar[idx]);                             \
     } while (0);
         
-#define DO_INTERMEDIATE_STAGE(ty, pre, idx, str_state)\
-    do\
-    {\
-        for (stream* p = pre->source; p->next; p = p->next)\
-        {\
-            switch (p->op_ty)\
-            {\
-                case STR_NONE:\
-                {\
-                    continue;\
-                }\
-                case STR_FILTER:\
-                {\
-                    DO_FILTER(short, p->sink, source->h->spl->v.short_spl.body, idx, str_state->spl_fence);\
-                    break;\
-                }\
-                case STR_MAP:\
-                {\
-                    DO_MAP(short, p->sink, pre->source->h->spl->v.short_spl.body, idx);\
-                    break;\
-                }\
-                default:\
-                {\
-                    return;\
-                }\
-            }\
-        }\
+#define DO_INTERMEDIATE_STAGE(ty, pre, idx, str_state)                      \
+    do                                                                      \
+    {                                                                       \
+        for (stream* p = pre->source; p->next; p = p->next)                 \
+        {                                                                   \
+            switch (p->op_ty)                                               \
+            {                                                               \
+                case STR_NONE:                                              \
+                {                                                           \
+                    continue;                                               \
+                }                                                           \
+                case STR_FILTER:                                            \
+                {                                                           \
+                    DO_FILTER(short, p->sink,                               \
+                    source->h->spl->v.short_spl.body,                       \
+                    idx, str_state->spl_fence);                             \
+                    break;                                                  \
+                }                                                           \
+                case STR_MAP:                                               \
+                {                                                           \
+                    DO_MAP(short, p->sink,                                  \
+                    pre->source->h->spl->v.short_spl.body, idx);            \
+                    break;                                                  \
+                }                                                           \
+                default:                                                    \
+                {                                                           \
+                    return;                                                 \
+                }                                                           \
+            }                                                               \
+        }                                                                   \
     } while (0);
     
 #ifdef __cplusplus
